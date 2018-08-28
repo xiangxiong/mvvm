@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <input type="text" name="inputItem" id="inputItem">
+    <div id="bindItem"></div>
+   <script type="text/javascript">
+    // 使用 __proto__
+    var obj1 = {};
+    var descriptor = Object.create(null);
+
+    descriptor.value = 'static';
+    Object.defineProperty(obj1,'key',descriptor);
+    console.log(obj1);
+   </script>
+
+   <script type="text/javascript">
+    var obj2 = {};
+    Object.defineProperty(obj2,"key",{
+      enumerable: true,
+      configurable: false,
+      writable: false,
+      value: "static"
+    });
+   </script>
+
+   <script type="text/javascript">
+
+    function Archiver(){
+
+      var temperature = null;
+      var archive = [];
+      var cacheKey = null;
+
+      Object.defineProperty(this,'cacheKey',{
+         get:function(){
+           console.log('get!');
+           return cacheKey;
+         },
+         set:function(value){
+           cacheKey = value;
+           archive.push({val:cacheKey});
+         }
+      });
+
+      this.getArchive = function() {
+        return archive;
+      };
+    }
+
+    var arc = new Archiver();
+    arc.temperature;
+    arc.temperature = 11;
+    arc.temperature = 13;
+    console.log(arc.getArchive());
+
+   </script>
+
+   <script type="text/javascript">
+     var data = {};
+     var bind = [];
+
+     Object.defineProperty(data,'key',{
+       get: function (){
+         return bind;
+       },
+       set: function (value){
+          bind.push(value);
+       },
+       enumerable : false,
+        configurable : false
+     });
+     
+     var inputItem = document.getElementById('inputItem');
+     var bindItem = document.getElementById('bindItem');
+     inputItem.addEventListener('keyup',function(){
+         data['key'] = inputItem.value;
+         for(var i=0; i<bind.length;i++){
+           console.log(bind[i]);
+           bindItem.innerHTML += bind[i];
+         }
+     });
+   </script>
+  </body>
+</html>
